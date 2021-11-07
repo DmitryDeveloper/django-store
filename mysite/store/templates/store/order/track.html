@@ -1,0 +1,33 @@
+{% extends "store/main.html" %}
+{% block page %}
+ <section class="py-5 left container">
+     <ul style="display: flex; justify-content: space-evenly;">
+         <li>
+             <a href="{% url 'store:track-orders' %}?status=active">Active</a>
+             <span>({{ active_orders_count }})</span>
+         </li>
+         <li>
+            <a href="{% url 'store:track-orders' %}?status=completed">Completed</a>
+             <span>({{ completed_orders_count }})</span>
+         </li>
+     </ul>
+
+    {% if orders %}
+        <ul>
+        {% for order in orders %}
+            <li>
+                <h3>{{ order.street }}</h3> <span>{{ order.created_at }}</span>
+                <ul>
+                    {% for product in order.products %}
+                    <li>
+                        <h4>{{ product.name }}</h4>
+                        <span>{{ product.count }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+ </section>
+{% endblock %}

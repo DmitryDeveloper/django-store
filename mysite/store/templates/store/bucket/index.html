@@ -1,0 +1,44 @@
+{% extends "store/main.html" %}
+{% block page %}
+    {% if order_message %}
+        <p style="background-color: green; color: white">{{ order_message }}</p>
+    {% endif %}
+  <section class="py-5 text-center container">
+    {% if products %}
+    <h3>Total price: {{ total_price }}</h3>
+    <p>
+        <a href="{% url 'store:bucket-clear' %}">
+            Clean bucket
+        </a>
+    </p>
+    <ul class="list-group">
+         {% for product in products %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            <a href="{% url 'store:product-detail' product.id %}">{{ product.name }}</a>
+            <form action="{% url 'store:bucket-store' product.id %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="redirect_to" value="bucket">
+                        <button type="submit" class="btn btn-sm btn-outline-secondary">+</button>
+                </form>
+                <form action="{% url 'store:bucket-reduce' product.id %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="redirect_to" value="bucket">
+                        <button type="submit" class="btn btn-sm btn-outline-secondary">-</button>
+                </form>
+            <span class="badge bg-primary rounded-pill">{{ product.count }}
+            </span>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+        <h4>No products in bucket.</h4>
+    {% endif %}
+
+   <br>
+    <p>
+        {% if products %}
+            <a href="{% url 'store:make-order' %}">Make order</a>
+        {% endif %}
+    </p>
+  </section>
+{% endblock %}
